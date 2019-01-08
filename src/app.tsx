@@ -21,14 +21,45 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/index/index'
+      'pages/index/index',
+      'pages/poem/index',
+      'pages/aeon/index',
+      'pages/enclave/index',
+      'pages/totheend/index'
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    }
+      navigationBarBackgroundColor: '#000',
+      navigationBarTitleText: '今历',
+      navigationBarTextStyle: 'white',
+    },
+    tabBar: {
+      backgroundColor: '#000',
+      color: '#fff',
+      position: 'top',
+      list: [
+        {
+          pagePath: 'pages/index/index',
+          text: "方今"
+        },
+        {
+          pagePath: "pages/poem/index",
+          text: "搜韵"
+        },
+        {
+          pagePath: "pages/enclave/index",
+          text: "飞地"
+        },
+        {
+          pagePath: "pages/aeon/index",
+          text: "万古"
+        },
+        {
+          pagePath: "pages/totheend/index",
+          text: "观止"
+        }
+      ]
+    },
   }
 
   componentDidMount () {}
