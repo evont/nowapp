@@ -34,29 +34,39 @@ class App extends Component {
       navigationBarTextStyle: 'white',
     },
     tabBar: {
-      backgroundColor: '#000',
-      color: '#fff',
-      position: 'top',
+      color: '#aeaeae',
+      selectedColor: '#444',
+      borderStyle: 'white',
       list: [
         {
           pagePath: 'pages/index/index',
+          iconPath: 'assets/T.png',
+          selectedIconPath: 'assets/T_on.png',
           text: "方今"
         },
         {
           pagePath: "pages/poem/index",
-          text: "搜韵"
+          text: "搜韵",
+          iconPath: 'assets/O.png',
+          selectedIconPath: 'assets/O_on.png',
         },
         {
           pagePath: "pages/enclave/index",
-          text: "飞地"
+          text: "飞地",
+          iconPath: 'assets/D.png',
+          selectedIconPath: 'assets/D_on.png',
         },
         {
           pagePath: "pages/aeon/index",
-          text: "万古"
+          text: "万古",
+          iconPath: 'assets/A.png',
+          selectedIconPath: 'assets/A_on.png',
         },
         {
           pagePath: "pages/totheend/index",
-          text: "观止"
+          text: "观止",
+          iconPath: 'assets/Y.png',
+          selectedIconPath: 'assets/Y_on.png',
         }
       ]
     },
