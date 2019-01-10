@@ -16,10 +16,9 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-
+      'pages/poem/index',
       'pages/totheend/index',
       'pages/index/index',
-      'pages/poem/index',
       'pages/aeon/index',
       'pages/enclave/index',
     ],

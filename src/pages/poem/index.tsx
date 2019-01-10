@@ -1,42 +1,62 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { View, Image, Text, RichText } from '@tarojs/components'
+
+import api from '../../util/api'
+
+import leftPng from '../../assets/icon-left.png'
+import rightPng from '../../assets/icon-right.png'
+
+interface clause {
+  Content: string,
+  Comments?: [],
+  BreakAfter?: boolean,
+}
+
+interface IState {
+  loading: boolean,
+  Poem: {
+    Author: string,
+    Title: {
+      Content: string
+    },
+    IsTwoClausesPerSentence: boolean,
+    Clauses: [],
+  },
+  Date: string,
+  Index: number,
+  Total: number,
+}
 
 
-// #region 书写注意
-// 
-// 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
-// 需要显示声明 connect 的参数类型并通过 interface 的方式指定 Taro.Component 子类的 props
-// 这样才能完成类型检查和 IDE 的自动提示
-// 使用函数模式则无此限制
-// ref: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20796
-//
-// #endregion
-
-type PageStateProps = {
-  counter: {
-    num: number
+function IsInlineComment(content) {
+  let inline = true;
+  for (let i = 0; i < content.length; i++) {
+      if (content[i] >= "㐀" && content[i] <= "﨩") {
+          inline = false;
+          break;
+      }
   }
+
+  return inline;
+}
+function formatClause(clause) {
+    let content = clause.Content;
+    if (clause.Comments) {
+      for (let j = clause.Comments.length - 1; j >= 0; j-=1) {
+        const comment = clause.Comments[j];
+        if (comment.Type != "Text") {
+          continue;
+        }
+        if (IsInlineComment(comment.Content)) {
+          content = content.substr(0, comment.Index) + comment.Content + content.substr(comment.Index);
+        }
+      }
+    }
+    return content;
 }
 
-type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
-}
-
-type PageOwnProps = {}
-
-type PageState = {}
-
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-interface Index {
-  props: IProps;
-}
-
-class Index extends Component {
+class Poem extends Component<{}, IState> {
 
     /**
    * 指定config的类型声明为: Taro.Config
@@ -49,19 +69,93 @@ class Index extends Component {
     navigationBarTitleText: '搜韵'
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    loading: true,
+    Poem: {
+      Author: '',
+      Title: {
+        Content: ''
+      },
+      IsTwoClausesPerSentence: true,
+      Clauses: [],
+    },
+    Date: '',
+    Index: 0,
+    Total: 0,
+  } as IState
+
+  fetchData(direction = 1) {
+    try {
+      const ind = this.state.Index;
+      const total = this.state.Total;
+      if (ind === 0 && direction === -1) {
+        Taro.showToast({
+          title: '已经是第一首'
+        })
+      } else if (ind < total || direction === 0) {
+        Taro.request({
+          url: api.getURL(api.APIMAP.POEM, { index: ind + direction }),
+        }).then(res => {
+          const { data } = res; 
+          const { Content = {}, Date = '', Index = 1, Total = 0 } = data;
+          const Poem = Content.Poem || {};
+          this.setState({
+            Poem,
+            Date,
+            Index,
+            Total,
+            loading: false,
+          })
+        });
+      } else {
+        Taro.showToast({
+          title: '没有更多了'
+        })
+      }
+    } catch (error) {
+      Taro.showToast({
+        title: '服务器开小差了'
+      })
+    }
+  }
+  
+  async componentDidMount() {
+    this.fetchData(0);
   }
 
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
   render () {
+    const { Poem, Date } = this.state;
+    const { Clauses } = Poem;
+    let poemContent = '';
+    if (Clauses) {
+      poemContent = '<p class="poem-clauses-clause">';
+      for (let i = 0, len = Clauses.length; i < len; i += 1) {
+        const clause:clause = Clauses[i];
+        let content = formatClause(clause);
+        
+        if (((Poem.IsTwoClausesPerSentence && i % 2 == 1) || "。；！？".indexOf(clause.Content.substr(clause.Content.length - 1)) >= 0) && i < len - 1)
+        {
+          content += '</p><p class="poem-clauses-clause">';
+        }
+        if (clause.BreakAfter)
+        {
+          content += '</p><p class="poem-clauses-clause">';
+        }
+        poemContent += content;
+      }
+    }
     return (
-      <View className='index'>
+      <View className='poem'>
+        <View className='poem-main'>
+          <View className='poem-head'>
+            <Text className='poem-head-date'>{ Date }</Text>
+            <Text className='poem-head-title' >{ Poem.Title.Content }</Text>
+            <Text className='poem-head-author'>{ Poem.Author }</Text>
+          </View>
+          <RichText nodes={poemContent} className='poem-clauses' />
+        </View>
+        <Image src={leftPng} className='pagination pagination_left' onClick={this.fetchData.bind(this, -1)}/>
+        <Image src={rightPng} className='pagination pagination_right' onClick={this.fetchData.bind(this, 1)}/>
       </View>
     )
   }
@@ -74,4 +168,4 @@ class Index extends Component {
 //
 // #endregion
 
-export default Index as ComponentClass<PageOwnProps, PageState>
+export default Poem

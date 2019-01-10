@@ -1,8 +1,6 @@
-import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, RichText, Text } from '@tarojs/components'
 import api from '../../util/api'
-import env from '../../util/env'
 
 interface IState {
   loading: boolean,
@@ -13,7 +11,7 @@ interface IState {
   digest: string,
 }
 
-class Index extends Component<{}, IState> {
+class Totheend extends Component<{}, IState> {
 
     /**
    * 指定config的类型声明为: Taro.Config
@@ -77,4 +75,4 @@ class Index extends Component<{}, IState> {
 //
 // #endregion
 
-export default Index as ComponentClass<PageOwnProps, PageState>
+export default Totheend
