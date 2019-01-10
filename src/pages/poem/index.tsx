@@ -6,6 +6,7 @@ import api from '../../util/api'
 
 import leftPng from '../../assets/icon-left.png'
 import rightPng from '../../assets/icon-right.png'
+import './index.scss'
 
 interface clause {
   Content: string,
@@ -90,7 +91,8 @@ class Poem extends Component<{}, IState> {
       const total = this.state.Total;
       if (ind === 0 && direction === -1) {
         Taro.showToast({
-          title: '已经是第一首'
+          title: '已经是第一首',
+          icon: 'none'
         })
       } else if (ind < total || direction === 0) {
         Taro.request({
@@ -109,12 +111,14 @@ class Poem extends Component<{}, IState> {
         });
       } else {
         Taro.showToast({
-          title: '没有更多了'
+          title: '没有更多了',
+          icon: 'none'
         })
       }
     } catch (error) {
       Taro.showToast({
-        title: '服务器开小差了'
+        title: '服务器开小差了',
+        icon: 'none'
       })
     }
   }
@@ -154,8 +158,12 @@ class Poem extends Component<{}, IState> {
           </View>
           <RichText nodes={poemContent} className='poem-clauses' />
         </View>
-        <Image src={leftPng} className='pagination pagination_left' onClick={this.fetchData.bind(this, -1)}/>
-        <Image src={rightPng} className='pagination pagination_right' onClick={this.fetchData.bind(this, 1)}/>
+        <View className='pagination pagination_left'>
+          <Image src={leftPng} className='pagination-img' onClick={this.fetchData.bind(this, -1)}/>
+        </View>
+        <View className='pagination pagination_right'>
+          <Image src={rightPng} className='pagination-img' onClick={this.fetchData.bind(this, 1)}/>
+        </View>
       </View>
     )
   }

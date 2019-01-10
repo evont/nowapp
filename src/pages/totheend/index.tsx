@@ -1,6 +1,7 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, RichText, Text } from '@tarojs/components'
 import api from '../../util/api'
+import './index.scss'
 
 interface IState {
   loading: boolean,

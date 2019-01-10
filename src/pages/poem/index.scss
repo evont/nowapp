@@ -1,7 +1,11 @@
 .pagination {
   position: absolute;
   width: 60px;
-  height: 20px;
+  height: 60px;
+  &-img {
+    width: 60px;
+    height: 20px;
+  }
   &_left {
     left: 40px;
     top: 40%;
