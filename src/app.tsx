@@ -1,14 +1,9 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import '@tarojs/async-await'
-import { Provider } from '@tarojs/redux'
 
 import Index from './pages/index'
 
-import configStore from './store'
-
 import './app.scss'
-
-const store = configStore()
 
 class App extends Component {
 
@@ -21,11 +16,12 @@ class App extends Component {
    */
   config: Config = {
     pages: [
+
+      'pages/totheend/index',
       'pages/index/index',
       'pages/poem/index',
       'pages/aeon/index',
       'pages/enclave/index',
-      'pages/totheend/index'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -72,19 +68,14 @@ class App extends Component {
     },
   }
 
-  componentDidMount () {}
-
-  componentDidShow () {}
-
-  componentDidHide () {}
-
-  componentCatchError () {}
-
+  // componentDidMount () {
+  //   if (env.isWx) {
+  //     wx.showShareMenu();
+  //   }
+  // }
   render () {
     return (
-      <Provider store={store}>
-        <Index />
-      </Provider>
+      <Index />
     )
   }
 }

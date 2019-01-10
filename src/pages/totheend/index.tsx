@@ -1,57 +1,19 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { View, RichText, Text } from '@tarojs/components'
+import api from '../../util/api'
+import env from '../../util/env'
 
-import { add, minus, asyncAdd } from '../../actions/counter'
-
-
-// #region 书写注意
-// 
-// 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
-// 需要显示声明 connect 的参数类型并通过 interface 的方式指定 Taro.Component 子类的 props
-// 这样才能完成类型检查和 IDE 的自动提示
-// 使用函数模式则无此限制
-// ref: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20796
-//
-// #endregion
-
-type PageStateProps = {
-  counter: {
-    num: number
-  }
+interface IState {
+  loading: boolean,
+  data: object,
+  content: string,
+  author: string,
+  title: string,
+  digest: string,
 }
 
-type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
-}
-
-type PageOwnProps = {}
-
-type PageState = {}
-
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-interface Index {
-  props: IProps;
-}
-
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
-  },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
-  }
-}))
-class Index extends Component {
+class Index extends Component<{}, IState> {
 
     /**
    * 指定config的类型声明为: Taro.Config
@@ -64,19 +26,45 @@ class Index extends Component {
     navigationBarTitleText: '观止'
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    loading: true,
+    data: {},
+    content: '',
+    author: '',
+    title: '',
+    digest: ''
   }
 
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
+  async componentDidMount() {
+    try {
+      const res = await Taro.request({
+        url: api.getURL(api.APIMAP.TOTHEEND)
+      });
+      const { data } = res;
+      const { content = '暂无内容', author = '佚名', title = '', digest = '' } = data.data;
+      this.setState({
+        data: data.data || {},
+        content,
+        author,
+        title,
+        digest,
+        loading: false,
+      })
+    } catch (error) {
+      Taro.showToast({
+        title: '服务器开小差了'
+      })
+    }
+  }
 
   render () {
     return (
-      <View className='index'>
+      <View className='tte'>
+        <View className='tte-head'>
+          <Text className='tte-title'>{this.state.title}</Text>
+          <Text className='tte-author'>{this.state.author}</Text>
+        </View>
+        <RichText className='tte-content' nodes={this.state.content} />
       </View>
     )
   }
