@@ -9,6 +9,7 @@
   position: absolute;
   width: 100%;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   font-family: PingFang HK,San Francisco,Helvetica;
   font-weight: 300;
   &-loading {
@@ -72,7 +73,8 @@
     .h4 {
       margin: 40px 0;
       padding: 8px;
-      font-size: 24px;
+      font-size: 26px;
+      line-height: 50px;
       font-weight: 500;
       color: #5c5c5c;
       padding: 20px 16px;
@@ -81,10 +83,10 @@
     }
     .h5 {
       color: #aaa;
-      font-size: 24px;
+      font-size: 26px;
     }
     .h6, .small, .p.small, .p .small {
-      margin: 16px auto;
+      margin: 32px auto;
       text-align: center;
       color: #ccc;
       font-weight: normal;
@@ -93,8 +95,8 @@
       margin-top: 28px;
     }
     .section {
-      font-size: 28px;
-      line-height: 50px;
+      font-size: 30px;
+      line-height: 2em;
       & + .h3 {
         margin-top: 60px;
       }
@@ -109,8 +111,8 @@
     }
     .p {
       margin-top: 40px;
-      line-height: 40px;
-      font-size: 28px;
+      line-height: 1.7em;
+      font-size: 30px;
       text-align:justify;
       &.poetry {
         margin-top: 56px;
@@ -143,7 +145,7 @@
     }
     .hr {
       width: 60%;
-      margin: 420px auto;
+      margin: 42px auto;
       color: #ddd;
       &.style-two {
         border: 0;
