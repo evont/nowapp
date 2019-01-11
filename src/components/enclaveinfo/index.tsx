@@ -45,7 +45,7 @@ class Enclaveblock extends Component<IProps, {}> {
     return (
       <View className='info'>
         { isMain ? <Text className='info-date'>{ weekDay(artTime) }</Text> : ''}
-        <View className='info-block'>
+        <View className='info-block' onClick={this.goDetail}>
           <View className='info-block-thumb'>
             <Image src={artThumb} className='thumb' />
             <Text className='cate'>{ cateName }</Text>

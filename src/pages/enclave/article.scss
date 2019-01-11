@@ -1,0 +1,172 @@
+.back {
+  position: absolute;
+  left: 40px;
+  width: 60px;
+  height: 80px;
+  z-index: 10;
+}
+.encart {
+  position: absolute;
+  width: 100%;
+  overflow: auto;
+  font-family: PingFang HK,San Francisco,Helvetica;
+  font-weight: 300;
+  &-loading {
+    display: block;
+    width: 100%;
+    position: absolute;
+    top: 300px;
+    text-align: center;
+    font-size: 30px;
+  }
+  &-main {
+    img {
+      max-width: 100%;
+    }
+  }
+  &-thumb {
+    width: 100%;
+  }
+  &-head, &-content {
+    padding: 40px;
+    margin: auto;
+  }
+  &-head {
+    padding: 20px 40px 40px 40px;
+    &-left, &-right {
+      display: inline-block;
+      width: 48%;
+    }
+    &-title {
+      font-size: 50px;
+      font-weight: 400;
+    }
+    &-editor {
+      margin-top: 20px;
+      font-size: 24px;
+      .author {
+        color: #9c323e;
+      }
+      .time {
+        color: #aaa;
+        &::before {
+          content: '·';
+          margin: 0 10px;
+        }
+      }
+    }
+  }
+  &-content {
+    .h2 {
+      margin-top: 32px;
+      font-size: 48px;
+      color: #555;
+    }
+    .h3 {
+      margin-top: 32px;
+      font-size: 36px;
+      & + .h5 {
+        margin-top: 10px;
+      }
+    }
+    .h4 {
+      margin: 40px 0;
+      padding: 8px;
+      font-size: 24px;
+      font-weight: 500;
+      color: #5c5c5c;
+      padding: 20px 16px;
+      margin: 40px 0 0 0;
+      background-color: #F2F2F2;
+    }
+    .h5 {
+      color: #aaa;
+      font-size: 24px;
+    }
+    .h6, .small, .p.small, .p .small {
+      margin: 16px auto;
+      text-align: center;
+      color: #ccc;
+      font-weight: normal;
+    }
+    &>.section:first-child {
+      margin-top: 28px;
+    }
+    .section {
+      font-size: 28px;
+      line-height: 50px;
+      & + .h3 {
+        margin-top: 60px;
+      }
+      &+ p.emptyPara + .section {
+        margin-top: -60px;
+      }
+    }
+    .p, .h2, .h3, .h5 {
+      & + .section {
+        margin-top: 40px;
+      }
+    }
+    .p {
+      margin-top: 40px;
+      line-height: 40px;
+      font-size: 28px;
+      text-align:justify;
+      &.poetry {
+        margin-top: 56px;
+        font-size: 32px;
+        line-height: 56px;
+        color: rgba(0,0,0,0.9);
+        overflow: hidden;
+      }
+      &.img {
+        margin-left: 0;
+        margin-right: 0;
+        text-align: center;
+        overflow: hidden;
+      }
+      &>.img {
+        float: left;
+      }
+    }
+    .img { 
+      margin-top: 20px;  
+      width: 100%;
+    }
+    .blockquote {
+      border-left: 4px solid #aaa;/* no */
+      margin: 40px 0;
+      padding: 20px 0 20px 40px;
+      .p {
+        margin: 0;
+      }
+    }
+    .hr {
+      width: 60%;
+      margin: 420px auto;
+      color: #ddd;
+      &.style-two {
+        border: 0;
+        height: 2px;/* no */
+        width: 50%;
+        margin: 64px auto;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));}
+    }
+    .footer {
+      padding: 20px 0;
+      .hr {
+        background: #EDEDED;
+        width: 100%;
+        margin:0 auto;
+      }
+      .ol {
+        list-style:decimal inside;
+        padding: 0
+      }
+      .ol .li, .p {
+        color: rgba(0,0,0,0.50);
+        font-size: 24px;
+      }
+    }
+  }
+}

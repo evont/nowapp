@@ -16,11 +16,11 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-
-      'pages/poem/index',
       'pages/enclave/index',
-      'pages/totheend/index',
       'pages/index/index',
+      'pages/poem/index',
+      'pages/enclave/article',
+      'pages/totheend/index',
     ],
     window: {
       backgroundTextStyle: 'light',
