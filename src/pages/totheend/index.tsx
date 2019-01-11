@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, RichText, Text } from '@tarojs/components'
+import { View, RichText, Text, Button } from '@tarojs/components'
 import api from '../../util/api'
 import './index.scss'
 
@@ -34,26 +34,34 @@ class Totheend extends Component<{}, IState> {
     digest: ''
   }
 
-  async componentDidMount() {
+  randomArticle = () => {
     try {
-      const res = await Taro.request({
+      Taro.request({
         url: api.getURL(api.APIMAP.TOTHEEND)
+      }).then(res => {
+        const { data } = res;
+        const { content = '暂无内容', author = '佚名', title = '', digest = '' } = data.data;
+        this.setState({
+          data: data.data || {},
+          content,
+          author,
+          title,
+          digest,
+          loading: false,
+        })
+        Taro.pageScrollTo({
+          scrollTop: 0,
+          duration: 300
+        })
       });
-      const { data } = res;
-      const { content = '暂无内容', author = '佚名', title = '', digest = '' } = data.data;
-      this.setState({
-        data: data.data || {},
-        content,
-        author,
-        title,
-        digest,
-        loading: false,
-      })
     } catch (error) {
       Taro.showToast({
         title: '服务器开小差了'
       })
     }
+  }
+  componentDidMount() {
+    this.randomArticle()
   }
 
   render () {
@@ -64,6 +72,7 @@ class Totheend extends Component<{}, IState> {
           <Text className='tte-author'>{this.state.author}</Text>
         </View>
         <RichText className='tte-content' nodes={this.state.content} />
+        <Button className='tte-random' plain type='default' size='mini' onClick={this.randomArticle}>看看新文章</Button>
       </View>
     )
   }
