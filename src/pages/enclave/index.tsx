@@ -1,39 +1,25 @@
-import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
-// #region 书写注意
-// 
-// 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
-// 需要显示声明 connect 的参数类型并通过 interface 的方式指定 Taro.Component 子类的 props
-// 这样才能完成类型检查和 IDE 的自动提示
-// 使用函数模式则无此限制
-// ref: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20796
-//
-// #endregion
+import { ScrollView, View, Text } from '@tarojs/components'
+import { Enclaveblock } from '../../components/enclaveinfo'
+import api from '../../util/api'
+import './index.scss'
 
-type PageStateProps = {
-  counter: {
-    num: number
-  }
+interface article {
+  isMain?: false,
+  artTime: number,
+  cateName: string, 
+  artTitle: string, 
+  artEditor: string,
+  artThumb: string,
+  artId: number,
 }
 
-type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
+interface IState {
+  loading: boolean,
+  enclave: object,
 }
 
-type PageOwnProps = {}
-
-type PageState = {}
-
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-interface Index {
-  props: IProps;
-}
-
-class Index extends Component {
+class Enclave extends Component<{}, IState> {
 
     /**
    * 指定config的类型声明为: Taro.Config
@@ -43,23 +29,88 @@ class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '飞地'
+    navigationBarTitleText: '观止'
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    loading: true,
+    enclave: {
+      article: [],
+      articleRecommend: [],
+      pageInfo: {
+        currentPage: '1',
+        total: 1,
+      }
+    }
   }
 
-  componentWillUnmount () { }
+  loadData = () => {
+    const { enclave } = this.state;
+    const page = parseInt(enclave.pageInfo.currentPage) + 1;
+    this.fetchData(page);
+  }
 
-  componentDidShow () { }
-
-  componentDidHide () { }
+  fetchData(page = 1) {
+    this.setState({
+      loading: true,
+    })
+    const { enclave } = this.state;
+    const now = new Date();
+    const today = new Date(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`)
+    let timestamp = today.getTime().toString().slice(0, -3);
+    if (enclave.article && enclave.article.length) {
+      const firstArticle:article = enclave.article.slice(-1)[0];
+      timestamp = `${firstArticle.artTime}`;
+    }
+    try {
+      Taro.request({
+        url: api.getURL(api.APIMAP.ENCLAVE, { page, timestamp: Number(timestamp) })
+      }).then(res => {
+        const { data } = res;
+        const { result } = data;
+        if (result.article) {
+          result.article[0].isMain = true;
+        }
+        if (page > 1) {
+          result.article = enclave.article.concat(result.article);
+        }
+        this.setState({
+          enclave: result, 
+          loading: false,
+        })
+      })
+    } catch (error) {
+      Taro.showToast({
+        title: '服务器开小差了'
+      })
+    }
+  }
+  componentDidMount() {
+    this.fetchData();
+  }
 
   render () {
+    const sys = Taro.getSystemInfoSync();
+    const { loading, enclave } = this.state;
+    const { articleRecommend, article } = enclave;
+    const recommendArticles = articleRecommend.map((item:article, index) => <Enclaveblock data={item} key={index} isMain={item.isMain} />)
+    const articles = article.map((item:article, index) => <Enclaveblock data={item} key={index} isMain={item.isMain} />)
+    const scrollStyle = `height: ${sys.windowHeight}px`;
     return (
-      <View className='index'>
-      </View>
+      <ScrollView
+        className='enclave'
+        scrollY
+        enableBackToTop
+        scrollTop={0}
+        style={scrollStyle}
+        onScrollToLower={this.loadData} 
+        >
+        <View className='enclave-main'>
+        { recommendArticles }
+        { articles }
+        </View>
+        { loading ? <Text className='loading'>加载中...</Text> : ''}
+      </ScrollView>
     )
   }
 }
@@ -71,4 +122,4 @@ class Index extends Component {
 //
 // #endregion
 
-export default Index as ComponentClass<PageOwnProps, PageState>
+export default Enclave

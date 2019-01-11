@@ -1,4 +1,3 @@
-import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text, RichText } from '@tarojs/components'
 
@@ -86,9 +85,12 @@ class Poem extends Component<{}, IState> {
   } as IState
 
   fetchData(direction = 1) {
+    Taro.showLoading({
+      title: '加载中...',
+    })
     try {
-      const ind = this.state.Index;
-      const total = this.state.Total;
+      const ind = this.state.Index
+      const total = this.state.Total
       if (ind === 0 && direction === -1) {
         Taro.showToast({
           title: '已经是第一首',
@@ -98,6 +100,7 @@ class Poem extends Component<{}, IState> {
         Taro.request({
           url: api.getURL(api.APIMAP.POEM, { index: ind + direction }),
         }).then(res => {
+          Taro.hideLoading()
           const { data } = res; 
           const { Content = {}, Date = '', Index = 1, Total = 0 } = data;
           const Poem = Content.Poem || {};
@@ -158,11 +161,11 @@ class Poem extends Component<{}, IState> {
           </View>
           <RichText nodes={poemContent} className='poem-clauses' />
         </View>
-        <View className='pagination pagination_left'>
-          <Image src={leftPng} className='pagination-img' onClick={this.fetchData.bind(this, -1)}/>
+        <View className='pagination pagination_left' onClick={this.fetchData.bind(this, -1)}>
+          <Image src={leftPng} className='pagination-img'/>
         </View>
-        <View className='pagination pagination_right'>
-          <Image src={rightPng} className='pagination-img' onClick={this.fetchData.bind(this, 1)}/>
+        <View className='pagination pagination_right' onClick={this.fetchData.bind(this, 1)}>
+          <Image src={rightPng} className='pagination-img'/>
         </View>
       </View>
     )

@@ -1,18 +1,26 @@
 .pagination {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  top: 0;
+  width: 100px;
+  height: 100%;
   &-img {
+    position: absolute;
     width: 60px;
     height: 20px;
   }
   &_left {
-    left: 40px;
-    top: 40%;
+    left: 0;
+    .pagination-img {
+      left: 40px;
+      top: 40%;
+    }
   }
   &_right {
-    right: 40px;
-    top: 60%;
+    right: 0;
+    .pagination-img {
+      right: 40px;
+      top: 60%;
+    }
   }
 }
 

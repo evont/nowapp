@@ -16,11 +16,11 @@ class App extends Component {
    */
   config: Config = {
     pages: [
+
       'pages/poem/index',
+      'pages/enclave/index',
       'pages/totheend/index',
       'pages/index/index',
-      'pages/aeon/index',
-      'pages/enclave/index',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -50,12 +50,6 @@ class App extends Component {
           text: "飞地",
           iconPath: 'assets/D.png',
           selectedIconPath: 'assets/D_on.png',
-        },
-        {
-          pagePath: "pages/aeon/index",
-          text: "万古",
-          iconPath: 'assets/A.png',
-          selectedIconPath: 'assets/A_on.png',
         },
         {
           pagePath: "pages/totheend/index",
