@@ -29,7 +29,7 @@ class Enclave extends Component<{}, IState> {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '观止'
+    navigationBarTitleText: '飞地'
   }
 
   state = {
@@ -90,12 +90,10 @@ class Enclave extends Component<{}, IState> {
   }
 
   render () {
-    const sys = Taro.getSystemInfoSync();
     const { loading, enclave } = this.state;
     const { articleRecommend, article } = enclave;
     const recommendArticles = articleRecommend.map((item:article, index) => <Enclaveblock data={item} key={index} isMain={item.isMain} />)
     const articles = article.map((item:article, index) => <Enclaveblock data={item} key={index} isMain={item.isMain} />)
-    const scrollStyle = `height: ${sys.windowHeight}px`;
     return (
         <View className='enclave'>
           <View className='enclave-main'>

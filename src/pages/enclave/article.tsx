@@ -1,6 +1,7 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { RichText, View, Text, Image } from '@tarojs/components'
 import api from '../../util/api'
+import env from '../../util/env'
 import './article.scss'
 import backBtn from '../../assets/icon-back.svg'
 
@@ -32,6 +33,16 @@ class Enclave extends Component<{}, IState> {
       artThumb: '',
       artContent: '',
       artId: 0,
+      shareDescription: ''
+    }
+  }
+
+  onShareAppMessage(res) {
+    const { shareDescription, artThumb, artId } = this.state.article;
+    return {
+      title: shareDescription,
+      path: `/pages/enclave/article?id=${artId}`,
+      imageUrl: artThumb,
     }
   }
   async componentDidMount() {
@@ -46,6 +57,10 @@ class Enclave extends Component<{}, IState> {
         loading: false,
       })
     })
+    if (env.isWx) {
+      Taro.showShareMenu();
+
+    }
   }
 
   formateTime(time) {
