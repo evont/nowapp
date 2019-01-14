@@ -53,7 +53,7 @@ class Totheend extends Component<{}, IState> {
           scrollTop: 0,
           duration: 300
         })
-      });
+      })
     } catch (error) {
       Taro.showToast({
         title: '服务器开小差了'

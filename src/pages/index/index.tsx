@@ -1,79 +1,92 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
-
+import { View, Image, Text } from '@tarojs/components'
+import api from '../../util/api'
 
 import './index.scss'
+import moonPng from '../../assets/moon.png'
 
-// #region 书写注意
-// 
-// 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
-// 需要显示声明 connect 的参数类型并通过 interface 的方式指定 Taro.Component 子类的 props
-// 这样才能完成类型检查和 IDE 的自动提示
-// 使用函数模式则无此限制
-// ref: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20796
-//
-// #endregion
 
-type PageStateProps = {
-  counter: {
-    num: number
-  }
+interface IState {
+  loading: boolean,
+  lunar: object,
+  textureWidth: number,
+  phaseStyle: string,
 }
 
-type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
-}
+class Index extends Component<{}, IState> {
 
-type PageOwnProps = {}
-
-type PageState = {}
-
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-interface Index {
-  props: IProps;
-}
-
-class Index extends Component {
-
-    /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
-    config: Config = {
-    navigationBarTitleText: '今历'
+  config: Config = {
+    navigationStyle: 'custom',
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    loading: true,
+    textureWidth: 0,
+    phaseStyle: '',
+    lunar: {
+      IMonthCn: '',
+      IDayCn: '',
+      Term: '',
+      phase: {
+        phase: 0,
+      }
+    },
+  }
+  async componentDidMount() {
+    Taro.request({
+      url: api.getURL(api.APIMAP.HOME)
+    }).then(res => {
+      const { data } = res;
+      this.setState({
+        lunar: data,
+        loading: false,
+      })
+      this.getPhaseStyle()
+    })
   }
 
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
+  getPhaseStyle() {
+    const query = Taro.createSelectorQuery()
+    query.select('#texture').boundingClientRect(rect => {
+      const { lunar } = this.state
+      const { phase } = lunar.phase
+      const allWidth = rect.width / 2
+      let phaseStyle = ''
+      const shadowColor = 'rgba(0, 0, 0, .7)'
+      const lightColor = '#fff'
+      console.log(phase, rect.width)
+      if (phase <= 0.25) {
+          phaseStyle = `border-right: ${phase / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
+      } else if (phase <= 0.5) {
+          phaseStyle = `border-right: ${(0.5 - phase) / 0.25 * allWidth}px solid ${lightColor}; border-left: ${(0.5 - phase) / 0.25 * allWidth}px solid ${shadowColor}; background-color: ${lightColor}`
+      } else if (phase <= 0.75)  {
+          phaseStyle = `border-right: ${(phase - 0.5) / 0.25 * allWidth}px solid ${shadowColor}; border-left: ${(phase - 0.5) / 0.25 * allWidth}px solid ${lightColor}; background-color: ${lightColor}`
+      } else if (phase <= 1) {
+          phaseStyle = `border-left: ${(1 - phase) / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
+      }
+      this.setState({
+        phaseStyle,
+      })
+    }).exec()
+  }
   render () {
+    const now = new Date()
+    const year = now.getFullYear()
+    const yearDayCount = year % 4 ? 365 : 366;
+    const days =  Math.round((now.getTime() - new Date(`${year}/01/01`).getTime()) / ( 24 * 60 * 60 * 1000));
+    const { phaseStyle } = this.state;
     return (
-      <View className='index'>
+      <View className='home'>
+        <View className='moon'>
+          <View className='moon-wrapper'>
+            <Image src={moonPng} className='moon-texture' id='texture'/>
+            <View className='moon-phase' style={phaseStyle}></View>
+          </View>
+        </View>
       </View>
     )
   }
 }
 
-// #region 导出注意
-//
-// 经过上面的声明后需要将导出的 Taro.Component 子类修改为子类本身的 props 属性
-// 这样在使用这个子类时 Ts 才不会提示缺少 JSX 类型参数错误
-//
-// #endregion
-
-export default Index as ComponentClass<PageOwnProps, PageState>
+export default Index;
