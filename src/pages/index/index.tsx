@@ -17,10 +17,6 @@ interface IState {
 
 class Index extends Component<{}, IState> {
 
-  config: Config = {
-    navigationStyle: 'custom',
-  }
-
   state = {
     loading: true,
     textureWidth: 0,
@@ -84,7 +80,7 @@ class Index extends Component<{}, IState> {
       <View className='home'>
         <View className='date'>
           <View className='date-left'>
-            <Text className='date-iMonth'>{ lunar.moonAlias } / { lunar.Term }</Text>
+            <Text className='date-iMonth'>{ lunar.moonAlias }&nbsp;&nbsp;/&nbsp;&nbsp;{ lunar.Term }</Text>
             <Text className='date-iDate'>{ lunar.IMonthCn }{ lunar.IDayCn }</Text>
           </View>
           <View className='date-right'>

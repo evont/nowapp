@@ -27,6 +27,7 @@ class App extends Component {
       navigationBarBackgroundColor: '#000',
       navigationBarTitleText: '今历',
       navigationBarTextStyle: 'white',
+      navigationStyle: 'custom'
     },
     tabBar: {
       color: '#aeaeae',
@@ -35,32 +36,32 @@ class App extends Component {
       list: [
         {
           pagePath: 'pages/index/index',
-          iconPath: 'assets/T.png',
-          selectedIconPath: 'assets/T_on.png',
+          iconPath: 'assets/icon-home.png',
+          selectedIconPath: 'assets/icon-home_on.png',
           text: "方今"
         },
         {
           pagePath: "pages/poem/index",
           text: "搜韵",
-          iconPath: 'assets/O.png',
-          selectedIconPath: 'assets/O_on.png',
+          iconPath: 'assets/icon-poem.png',
+          selectedIconPath: 'assets/icon-poem_on.png',
         },
         {
           pagePath: "pages/enclave/index",
           text: "飞地",
-          iconPath: 'assets/D.png',
-          selectedIconPath: 'assets/D_on.png',
+          iconPath: 'assets/icon-enclave.png',
+          selectedIconPath: 'assets/icon-enclave_on.png',
         },
         {
           pagePath: "pages/totheend/index",
           text: "观止",
-          iconPath: 'assets/Y.png',
-          selectedIconPath: 'assets/Y_on.png',
+          iconPath: 'assets/icon-article.png',
+          selectedIconPath: 'assets/icon-article_on.png',
         }
       ]
     },
   }
-
+  
   // componentDidMount () {
   //   if (env.isWx) {
   //     wx.showShareMenu();
