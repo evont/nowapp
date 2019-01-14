@@ -5,6 +5,7 @@ import api from '../../util/api'
 
 import './index.scss'
 import moonPng from '../../assets/moon.png'
+import { number } from 'prop-types';
 
 
 interface IState {
@@ -25,9 +26,13 @@ class Index extends Component<{}, IState> {
     textureWidth: 0,
     phaseStyle: '',
     lunar: {
+      cDay: 1,
+      cMonth: 1,
       IMonthCn: '',
       IDayCn: '',
       Term: '',
+      moonAlias: '',
+      ncWeek: '',
       phase: {
         phase: 0,
       }
@@ -55,7 +60,6 @@ class Index extends Component<{}, IState> {
       let phaseStyle = ''
       const shadowColor = 'rgba(0, 0, 0, .7)'
       const lightColor = '#fff'
-      console.log(phase, rect.width)
       if (phase <= 0.25) {
           phaseStyle = `border-right: ${phase / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
       } else if (phase <= 0.5) {
@@ -75,14 +79,28 @@ class Index extends Component<{}, IState> {
     const year = now.getFullYear()
     const yearDayCount = year % 4 ? 365 : 366;
     const days =  Math.round((now.getTime() - new Date(`${year}/01/01`).getTime()) / ( 24 * 60 * 60 * 1000));
-    const { phaseStyle } = this.state;
+    const { phaseStyle, lunar } = this.state;
     return (
       <View className='home'>
+        <View className='date'>
+          <View className='date-left'>
+            <Text className='date-iMonth'>{ lunar.moonAlias } / { lunar.Term }</Text>
+            <Text className='date-iDate'>{ lunar.IMonthCn }{ lunar.IDayCn }</Text>
+          </View>
+          <View className='date-right'>
+            <Text className='date-cDate'>{ lunar.cMonth }月{ lunar.cDay }日</Text>
+            <Text className='date-week'>{ lunar.ncWeek }</Text>
+          </View>
+        </View>
         <View className='moon'>
           <View className='moon-wrapper'>
             <Image src={moonPng} className='moon-texture' id='texture'/>
             <View className='moon-phase' style={phaseStyle}></View>
           </View>
+        </View>
+        <View className='percent'>
+          <Text className='percent-number'>{ (days / yearDayCount * 100).toFixed(2) }</Text>
+          <Text className='percent-unit'>%</Text>
         </View>
       </View>
     )

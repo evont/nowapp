@@ -59,7 +59,6 @@ class Enclave extends Component<{}, IState> {
     })
     if (env.isWx) {
       Taro.showShareMenu();
-
     }
   }
 
