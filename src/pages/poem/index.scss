@@ -48,6 +48,9 @@
       text-overflow: ellipsis;
       font-weight: 400;
       font-size: 40px;
+      &[data-status='1'] {
+        white-space: nowrap;
+      }
     }
     &-author {
       display: flex;

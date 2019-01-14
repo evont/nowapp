@@ -15,6 +15,7 @@ interface clause {
 
 interface IState {
   loading: boolean,
+  showTitle: number,
   Poem: {
     Author: string,
     Title: {
@@ -71,6 +72,7 @@ class Poem extends Component<{}, IState> {
 
   state = {
     loading: true,
+    showTitle: 1,
     Poem: {
       Author: '',
       Title: {
@@ -109,6 +111,7 @@ class Poem extends Component<{}, IState> {
             Date,
             Index,
             Total,
+            showTitle: 1,
             loading: false,
           })
         });
@@ -125,13 +128,20 @@ class Poem extends Component<{}, IState> {
       })
     }
   }
+
+  showOrigin = () => {
+    const { showTitle } = this.state;
+    this.setState({
+      showTitle: 1 - showTitle,
+    })
+  }
   
   async componentDidMount() {
     this.fetchData(0);
   }
 
   render () {
-    const { Poem, Date } = this.state;
+    const { Poem, Date, showTitle } = this.state;
     const { Clauses } = Poem;
     let poemContent = '';
     if (Clauses) {
@@ -156,7 +166,7 @@ class Poem extends Component<{}, IState> {
         <View className='poem-main'>
           <View className='poem-head'>
             <Text className='poem-head-date'>{ Date }</Text>
-            <Text className='poem-head-title' >{ Poem.Title.Content }</Text>
+            <Text className='poem-head-title' data-status={showTitle} onClick={this.showOrigin}>{ Poem.Title.Content }</Text>
             <Text className='poem-head-author'>{ Poem.Author }</Text>
           </View>
           <RichText nodes={poemContent} className='poem-clauses' />
