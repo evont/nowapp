@@ -14,7 +14,7 @@ interface clause {
 }
 
 interface IState {
-  loading: boolean,
+  isLoading: boolean,
   showTitle: number,
   Poem: {
     Author: string,
@@ -71,7 +71,7 @@ class Poem extends Component<{}, IState> {
   }
 
   state = {
-    loading: true,
+    isLoading: true,
     showTitle: 1,
     Poem: {
       Author: '',
@@ -112,7 +112,7 @@ class Poem extends Component<{}, IState> {
             Index,
             Total,
             showTitle: 1,
-            loading: false,
+            isLoading: false,
           })
         });
       } else {

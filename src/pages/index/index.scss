@@ -1,3 +1,6 @@
+.home {
+  overflow: hidden;
+}
 .moon {
   margin: 100px auto;
   position: relative;
@@ -35,7 +38,7 @@
 
 .percent {
   position: absolute;
-  right: -20px;
+  right: 0;
   bottom: 40px;
   opacity: .7;
   color: #ccc;

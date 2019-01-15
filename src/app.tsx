@@ -33,6 +33,7 @@ class App extends Component {
       color: '#aeaeae',
       selectedColor: '#444',
       borderStyle: 'white',
+      backgroundColor: '#f5f5f5',
       list: [
         {
           pagePath: 'pages/index/index',

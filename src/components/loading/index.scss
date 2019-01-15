@@ -1,0 +1,42 @@
+/* Colors */
+$borderColor1: rgba(0,0,0,0.25); /* used for row 1 & 2 */
+$borderColor2: rgba(0,0,0,0.50);
+$borderColor3: rgba(0,0,0,0.75);
+$borderColor4: rgba(0,0,0,1.0);  /* used for row 1 & 2 */
+
+/* Dimensions */
+$borderWidthX: 60px;
+$borderWidthY: 60px;
+
+@keyframes spinner {
+  0% {
+    border-color: $borderColor4 $borderColor1 $borderColor2 $borderColor3;
+  }
+  25% {
+    border-color: $borderColor3 $borderColor4 $borderColor1 $borderColor2;
+  }
+  50% {
+    border-color: $borderColor2 $borderColor3 $borderColor4 $borderColor1;
+  }
+  75% {
+    border-color: $borderColor1 $borderColor2 $borderColor3 $borderColor3;
+  }
+  100% {
+    border-color: $borderColor4 $borderColor1 $borderColor2 $borderColor3;
+  }
+}
+
+.loading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 0px;
+  height: 0px;
+  border: 0px solid $borderColor4;
+  border-width: $borderWidthY $borderWidthX;
+  animation: spinner 750ms linear infinite;
+  border-radius: $borderWidthY $borderWidthX $borderWidthY $borderWidthX;
+}

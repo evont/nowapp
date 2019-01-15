@@ -1,12 +1,13 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { RichText, View, Text, Image } from '@tarojs/components'
 import api from '../../util/api'
+import Loading from '../../components/loading'
 import env from '../../util/env'
 import './article.scss'
 import backBtn from '../../assets/icon-back.svg'
 
 interface IState {
-  loading: boolean,
+  isLoading: boolean,
   article: object,
 }
 
@@ -24,7 +25,7 @@ class Enclave extends Component<{}, IState> {
   }
 
   state = {
-    loading: true,
+    isLoading: true,
     article: {
       artTime: 0, 
       cateName: '', 
@@ -36,7 +37,7 @@ class Enclave extends Component<{}, IState> {
       shareDescription: ''
     }
   }
-
+  
   onShareAppMessage(res) {
     const { shareDescription, artThumb, artId } = this.state.article;
     return {
@@ -54,7 +55,7 @@ class Enclave extends Component<{}, IState> {
       const { result } = data;
       this.setState({
         article: result,
-        loading: false,
+        isLoading: false,
       })
     })
     if (env.isWx) {
@@ -89,7 +90,7 @@ class Enclave extends Component<{}, IState> {
     const sys = Taro.getSystemInfoSync()
     const encartStyle = `height: ${sys.windowHeight - sys.statusBarHeight- 40}px;top: ${sys.statusBarHeight + 40}px`
     const btnStyle = `top: ${sys.statusBarHeight}px`
-    const { loading, article } = this.state
+    const { isLoading, article } = this.state
     const content = this.formateArticle(article.artContent);
     const main = 
       <View className='encart-main'>
@@ -109,7 +110,7 @@ class Enclave extends Component<{}, IState> {
       <View>
         <Image src={backBtn} className='back' style={btnStyle} onClick={this.back}/>
         <View className='encart' style={encartStyle}>
-          {loading ? <Text className='encart-loading'>加载中...</Text> : main}
+          {isLoading ? <Loading /> : main}
         </View>
       </View>
     )

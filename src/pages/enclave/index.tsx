@@ -2,6 +2,8 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { Enclaveblock } from '../../components/enclaveinfo'
 import api from '../../util/api'
+import Loading from '../../components/loading'
+
 import './index.scss'
 
 interface article {
@@ -15,7 +17,8 @@ interface article {
 }
 
 interface IState {
-  loading: boolean,
+  isLoading: boolean,
+  isFetching: boolean,
   enclave: object,
 }
 
@@ -33,7 +36,8 @@ class Enclave extends Component<{}, IState> {
   }
 
   state = {
-    loading: true,
+    isLoading: true,
+    isFetching: false,
     enclave: {
       article: [],
       articleRecommend: [],
@@ -52,7 +56,7 @@ class Enclave extends Component<{}, IState> {
 
   fetchData(page = 1) {
     this.setState({
-      loading: true,
+      isFetching: true,
     })
     const { enclave } = this.state;
     const now = new Date();
@@ -76,7 +80,8 @@ class Enclave extends Component<{}, IState> {
         }
         this.setState({
           enclave: result, 
-          loading: false,
+          isLoading: false,
+          isFetching: false, 
         })
       })
     } catch (error) {
@@ -90,17 +95,19 @@ class Enclave extends Component<{}, IState> {
   }
 
   render () {
-    const { loading, enclave } = this.state;
+    const { isLoading, isFetching, enclave } = this.state;
     const { articleRecommend, article } = enclave;
     const recommendArticles = articleRecommend.map((item:article, index) => <Enclaveblock data={item} key={index} isMain={item.isMain} />)
     const articles = article.map((item:article, index) => <Enclaveblock data={item} key={index} isMain={item.isMain} />)
     return (
+      isLoading ? <Loading />
+      :
         <View className='enclave'>
           <View className='enclave-main'>
           { recommendArticles }
           { articles }
           </View>
-          { loading ? <Text className='loading'>加载中...</Text> : ''}
+          { isFetching ? <Text className='loading'>加载中...</Text> : ''}
         </View>
     )
   }

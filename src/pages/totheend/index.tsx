@@ -1,17 +1,23 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, RichText, Text, Button } from '@tarojs/components'
 import api from '../../util/api'
+import withShare from '../../util/withShare'
+
 import './index.scss'
+import Loading from '../../components/loading'
 
 interface IState {
-  loading: boolean,
+  isLoading: boolean,
   data: object,
+  date: object,
   content: string,
   author: string,
   title: string,
   digest: string,
 }
 
+// @ts-ignore
+@withShare()
 class Totheend extends Component<{}, IState> {
 
     /**
@@ -24,30 +30,37 @@ class Totheend extends Component<{}, IState> {
   config: Config = {
     navigationBarTitleText: '观止'
   }
-
+  
   state = {
-    loading: true,
+    isLoading: true,
     data: {},
+    date: {
+      curr: '',
+    },
     content: '',
     author: '',
     title: '',
     digest: ''
   }
 
-  randomArticle = () => {
+  $setSharePath = () => `pages/totheend/index?date=${this.state.date.curr}`
+  $setShareTitle = () => `观止 | ${this.state.title}`
+
+  fetchData(date = '') {
     try {
       Taro.request({
-        url: api.getURL(api.APIMAP.TOTHEEND)
+        url: api.getURL(api.APIMAP.TOTHEEND, { date, })
       }).then(res => {
         const { data } = res;
-        const { content = '暂无内容', author = '佚名', title = '', digest = '' } = data.data;
+        const { content = '暂无内容', author = '佚名', title = '', digest = '', date } = data.data;
         this.setState({
           data: data.data || {},
           content,
           author,
           title,
           digest,
-          loading: false,
+          date,
+          isLoading: false,
         })
         Taro.pageScrollTo({
           scrollTop: 0,
@@ -61,19 +74,24 @@ class Totheend extends Component<{}, IState> {
     }
   }
   componentDidMount() {
-    this.randomArticle()
+    const { date = '' } = this.$router.params;
+    this.fetchData(date)
   }
 
   render () {
+    const { isLoading } = this.state;
     return (
-      <View className='tte'>
-        <View className='tte-head'>
-          <Text className='tte-title'>{this.state.title}</Text>
-          <Text className='tte-author'>{this.state.author}</Text>
+      isLoading ?
+        <Loading />
+        :
+        <View className='tte'>
+          <View className='tte-head'>
+            <Text className='tte-title'>{this.state.title}</Text>
+            <Text className='tte-author'>{this.state.author}</Text>
+          </View>
+          <RichText className='tte-content' nodes={this.state.content} />
+          <Button className='tte-random' plain type='default' size='mini' onClick={this.fetchData.bind(this, '')}>看看新文章</Button>
         </View>
-        <RichText className='tte-content' nodes={this.state.content} />
-        <Button className='tte-random' plain type='default' size='mini' onClick={this.randomArticle}>看看新文章</Button>
-      </View>
     )
   }
 }
