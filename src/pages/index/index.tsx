@@ -60,13 +60,13 @@ class Index extends Component<{}, IState> {
         const allWidth = rect.width / 2
         let phaseStyle = ''
         const shadowColor = 'rgba(0, 0, 0, .7)'
-        const lightColor = '#fff'
+        const lightColor = 'rgba(255, 255, 255, .5)'
         if (phase <= 0.25) {
             phaseStyle = `border-right: ${phase / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
         } else if (phase <= 0.5) {
-            phaseStyle = `border-right: ${(0.5 - phase) / 0.25 * allWidth}px solid ${lightColor}; border-left: ${(0.5 - phase) / 0.25 * allWidth}px solid ${shadowColor}; background-color: ${lightColor}`
+            phaseStyle = `border-left: ${(0.5 - phase) / 0.25 * allWidth}px solid ${shadowColor}; background-color: ${lightColor}`
         } else if (phase <= 0.75)  {
-            phaseStyle = `border-right: ${(phase - 0.5) / 0.25 * allWidth}px solid ${shadowColor}; border-left: ${(phase - 0.5) / 0.25 * allWidth}px solid ${lightColor}; background-color: ${lightColor}`
+            phaseStyle = `border-right: ${(phase - 0.5) / 0.25 * allWidth}px solid ${shadowColor};  background-color: ${lightColor}`
         } else if (phase <= 1) {
             phaseStyle = `border-left: ${(1 - phase) / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
         }
