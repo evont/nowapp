@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import dayJs from 'dayjs'
 import './index.scss'
-
+import DateUtil from '../../util/date'
 export default class Calendar extends Component {
   state = {
     time: dayJs(),
@@ -56,6 +56,10 @@ export default class Calendar extends Component {
     calendar = calendar.concat(this.getCurrent(startOfMonth.clone()))
     const endOfMonth = time.endOf('month')
     calendar = calendar.concat(this.getForFill(endOfMonth.clone()))
+    calendar.forEach(item => {
+      const lunar = DateUtil.solar2lunar(item.year(), item.month() + 1, item.date());
+      item.lunar = lunar;
+    });
     this.setState({
       calendar,
     })
@@ -73,7 +77,6 @@ export default class Calendar extends Component {
     return weeks
   }
   changeMonth(directon:number) {
-    console.log(directon);
     const { time } = this.state
     let newDate;
     if (directon < 0) {
@@ -87,13 +90,32 @@ export default class Calendar extends Component {
     })
     this.setCanlendar(newDate)
   }
+  touchDotX:number = 0
+  touchDotY:number = 0
+  touchStart = (e) => {
+    this.touchDotX = e.touches[0].pageX;
+    this.touchDotY = e.touches[0].pageY;
+  }
+  touchEnd = (e) => {
+    let touchMoveX = e.changedTouches[0].pageX;
+    let touchMoveY = e.changedTouches[0].pageY;
+    let tmX = touchMoveX - this.touchDotX;
+    let tmY = touchMoveY - this.touchDotY;
+    let absX = Math.abs(tmX);
+    let absY = Math.abs(tmY);
+    if (absX > 2 * absY) {
+      if (tmX < 0) {
+        this.changeMonth(1)
+      } else {
+        this.changeMonth(-1)
+      }
+    }
+  }
   render() {
+    const sysInfo = Taro.getSystemInfoSync();
     const { time, today, calendar } = this.state
-    console.log(calendar)
-    const header = <View className='cal-head'>
-      <View className='cal-head-arrow cal-head-arrow_left' onClick={this.changeMonth.bind(this, -1)}></View>
+    const header = <View className='cal-head' style={ `padding-top: ${sysInfo.statusBarHeight}px` }>
       <Text className='cal-head-title'>{ time.format('MMM YYYY') }</Text>
-      <View className='cal-head-arrow cal-head-arrow_right' onClick={this.changeMonth.bind(this, 1)}></View>
     </View>
     const weekList = this.getWeekList(calendar)
     const content = weekList.map((week:any, index) => {
@@ -101,14 +123,17 @@ export default class Calendar extends Component {
         let dayClass = 'day';
         if (day.isSame(today, 'day')) dayClass += ' day_today';
         if (day.month() !== time.month()) dayClass += ' day_other';
-        return <View className={ dayClass } key={day.format('MMDD')}><Text>{ day.format('DD') }</Text></View>
+        return <View className={ dayClass } key={day.format('MMDD')}>
+          <Text className='day-date'>{ day.format('DD') }</Text>
+          <Text className='day-lunar'>{ day.lunar.IDayCn }</Text>
+        </View>
       })
       return <View className='week' key={`week-${index}`}>{ days }</View>
     })
     return (
       <View className='cal'>
         { header }
-        <View className='cal-content'>
+        <View className='cal-content' onTouchStart={ this.touchStart } onTouchEnd={ this.touchEnd }>
           { content }
         </View>
       </View>

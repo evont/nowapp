@@ -24,7 +24,7 @@ class App extends Component {
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#000',
+      navigationBarBackgroundColor: '#333',
       navigationBarTitleText: '今历',
       navigationBarTextStyle: 'white',
     },

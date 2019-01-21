@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
 
 import api from '../../util/api'
@@ -21,7 +21,9 @@ interface IState {
 // @ts-ignore
 @withShare()
 class Index extends Component<{}, IState> {
-
+  config: Config = {
+    navigationStyle: 'custom'
+  }
   state = {
     isLoading: false,
     textureWidth: 0,

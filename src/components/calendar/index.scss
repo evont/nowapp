@@ -3,7 +3,7 @@
     height: 100px;
     line-height: 100px;
     width: 100%;
-    background: rgba(66, 66, 66, 1);
+    background: #333;
     &-arrow {
       position: absolute;
       top: 35px;
@@ -21,24 +21,46 @@
       }
     }
     &-title {
-      display: block;
+      padding: 0 40px;
       color: #fff;
-      text-align: center;
     }
   }
 }
 .week {
   display: flex;
+  background: #333;
 }
 .day {
   flex: 1;
+  position: relative;
   text-align: center;
   justify-content: center;
   align-items: center;
+  height: 100px;
+  font-size: 18px;
+  color: #fff;
+  &-date {
+    display: block;
+    font-size: 28px;
+  }
+  &-lunar {
+    display: block;
+  }
   &_today {
-    background: #eee;
+    &::before {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 6px;
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      background: #eee;
+      // border-radius: 50%;
+    }
   }
   &_other {
-    color: #eee;
+    opacity: .6;
   }
 }
