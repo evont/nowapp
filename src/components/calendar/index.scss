@@ -1,0 +1,44 @@
+.cal {
+  &-head {
+    height: 100px;
+    line-height: 100px;
+    width: 100%;
+    background: rgba(66, 66, 66, 1);
+    &-arrow {
+      position: absolute;
+      top: 35px;
+      height: 0;
+      width: 0;
+      border-width: 15px;
+      border-style: solid;
+      &_left {
+        left: 20px;
+        border-color: transparent #fff transparent transparent;
+      }
+      &_right {
+        right: 20px;
+        border-color: transparent transparent transparent #fff;
+      }
+    }
+    &-title {
+      display: block;
+      color: #fff;
+      text-align: center;
+    }
+  }
+}
+.week {
+  display: flex;
+}
+.day {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  &_today {
+    background: #eee;
+  }
+  &_other {
+    color: #eee;
+  }
+}

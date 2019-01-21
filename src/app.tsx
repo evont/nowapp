@@ -27,7 +27,6 @@ class App extends Component {
       navigationBarBackgroundColor: '#000',
       navigationBarTitleText: '今历',
       navigationBarTextStyle: 'white',
-      navigationStyle: 'custom'
     },
     tabBar: {
       color: '#aeaeae',

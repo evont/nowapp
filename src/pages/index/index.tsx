@@ -1,9 +1,11 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
+
 import api from '../../util/api'
 import withShare from '../../util/withShare'
 
 import Loading from '../../components/loading'
+import Calendar from '../../components/calendar'
 
 import './index.scss'
 import moonPng from '../../assets/moon.png'
@@ -21,7 +23,7 @@ interface IState {
 class Index extends Component<{}, IState> {
 
   state = {
-    isLoading: true,
+    isLoading: false,
     textureWidth: 0,
     phaseStyle: '',
     lunar: {
@@ -38,43 +40,43 @@ class Index extends Component<{}, IState> {
     },
   }
   componentDidMount() {
-    Taro.request({
-      url: api.getURL(api.APIMAP.HOME)
-    }).then(res => {
-      const { data } = res;
-      this.setState({
-        lunar: data,
-        isLoading: false,
-      }, () => {
-        this.getPhaseStyle()
-      })
-    })
+    // Taro.request({
+    //   url: api.getURL(api.APIMAP.HOME)
+    // }).then(res => {
+    //   const { data } = res;
+    //   this.setState({
+    //     lunar: data,
+    //     isLoading: false,
+    //   }, () => {
+    //     this.getPhaseStyle()
+    //   })
+    // })
   }
-
+  
   getPhaseStyle() {
     const query = Taro.createSelectorQuery()
-    query.select('#texture').boundingClientRect(rect => {
-      if (rect) {
-        const { lunar } = this.state
-        const { phase } = lunar.phase
-        const allWidth = rect.width / 2
-        let phaseStyle = ''
-        const shadowColor = 'rgba(0, 0, 0, .7)'
-        const lightColor = 'rgba(255, 255, 255, .5)'
-        if (phase <= 0.25) {
-            phaseStyle = `border-right: ${phase / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
-        } else if (phase <= 0.5) {
-            phaseStyle = `border-left: ${(0.5 - phase) / 0.25 * allWidth}px solid ${shadowColor}; background-color: ${lightColor}`
-        } else if (phase <= 0.75)  {
-            phaseStyle = `border-right: ${(phase - 0.5) / 0.25 * allWidth}px solid ${shadowColor};  background-color: ${lightColor}`
-        } else if (phase <= 1) {
-            phaseStyle = `border-left: ${(1 - phase) / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
-        }
-        this.setState({
-          phaseStyle,
-        })
-      }
-    }).exec()
+    // query.select('#texture').boundingClientRect(rect => {
+    //   if (rect) {
+    //     const { lunar } = this.state
+    //     const { phase } = lunar.phase
+    //     const allWidth = rect.width / 2
+    //     let phaseStyle = ''
+    //     const shadowColor = 'rgba(0, 0, 0, .7)'
+    //     const lightColor = 'rgba(255, 255, 255, .5)'
+    //     if (phase <= 0.25) {
+    //         phaseStyle = `border-right: ${phase / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
+    //     } else if (phase <= 0.5) {
+    //         phaseStyle = `border-left: ${(0.5 - phase) / 0.25 * allWidth}px solid ${shadowColor}; background-color: ${lightColor}`
+    //     } else if (phase <= 0.75)  {
+    //         phaseStyle = `border-right: ${(phase - 0.5) / 0.25 * allWidth}px solid ${shadowColor};  background-color: ${lightColor}`
+    //     } else if (phase <= 1) {
+    //         phaseStyle = `border-left: ${(1 - phase) / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
+    //     }
+    //     this.setState({
+    //       phaseStyle,
+    //     })
+    //   }
+    // }).exec()
   }
   render () {
     const now = new Date()
@@ -87,6 +89,7 @@ class Index extends Component<{}, IState> {
         <Loading />
         : 
         <View className='home'>
+          <Calendar />
           <View className='date'>
             <View className='date-left'>
               <Text className='date-iMonth'>{ lunar.monthAlias }&nbsp;&nbsp;/&nbsp;&nbsp;{ lunar.Term }</Text>
