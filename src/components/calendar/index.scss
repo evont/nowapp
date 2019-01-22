@@ -1,9 +1,23 @@
+@keyframes bounce{
+  0%,100% {
+    transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+	0% { transform: translateY(2%) }
+	75% { transform: translateY(-2%) }
+	100% {  transform: translateY(0) }
+}
+
 .cal {
+  position: absolute;
+  width: 100%;
   &-head {
+    position: relative;
     height: 100px;
-    line-height: 100px;
+    padding: 0 40px;
     width: 100%;
     background: #333;
+    color: #fff;
+    z-index: 2;
     &-arrow {
       position: absolute;
       top: 35px;
@@ -21,8 +35,24 @@
       }
     }
     &-title {
-      padding: 0 40px;
-      color: #fff;
+      display: block;
+    }
+    &-subTitle {
+      display: block;
+      font-size: 20px;
+    }
+  }
+  &-content {
+    position: absolute;
+    width: 100%;
+    transition: all .6s ease-in-out;
+    animation-fill-mode: forwards;
+    transform: translateY(-100%);
+    overflow: hidden;
+    z-index: 1;
+    &_active {
+      animation: bounce 。8s;
+      transform: translateY(0)
     }
   }
 }
@@ -62,5 +92,19 @@
   }
   &_other {
     opacity: .6;
+  }
+  &_select {
+    &::before {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 6px;
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      background: #999;
+      // border-radius: 50%;
+    }
   }
 }

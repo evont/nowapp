@@ -3,13 +3,27 @@ import { View, Text } from '@tarojs/components'
 import dayJs from 'dayjs'
 import './index.scss'
 import DateUtil from '../../util/date'
-export default class Calendar extends Component {
+interface IProps {
+  handleDate: Function,
+}
+export default class Calendar extends Component<IProps, {}> {
   state = {
     time: dayJs(),
     today: dayJs(),
     calendar: [],
-    month: 1,
-    year: 1990,
+    isShowCalendar: 0,
+  }
+  getBarHeight() {
+    const query = Taro.createSelectorQuery().in(this.$scope)
+    return new Promise((resolve, reject) => {
+      query.select('#cal-head').boundingClientRect((rect:any) => {
+        if (rect) {
+          resolve(rect.height)
+        } else {
+          resolve()
+        }
+      }).exec()
+    })
   }
   componentDidMount() {
     const now = dayJs();
@@ -77,13 +91,16 @@ export default class Calendar extends Component {
     return weeks
   }
   changeMonth(directon:number) {
-    const { time } = this.state
+    const { time, today } = this.state
     let newDate;
     if (directon < 0) {
-      newDate = time.subtract(1, 'month')
+      newDate = time.subtract(1, 'month').startOf('month')
     }
     if (directon > 0) {
-      newDate = time.add(1, 'month')
+      newDate = time.add(1, 'month').startOf('month')
+    }
+    if (newDate.month() === today.month()) {
+      newDate = today;
     }
     this.setState({
       time: newDate,
@@ -111,19 +128,47 @@ export default class Calendar extends Component {
       }
     }
   }
+  setDay(day) {
+    const { time } = this.state
+    const newDay = dayJs(new Date(day.$y, day.$M, day.$D))
+    if (newDay.month() !== time.month()) {
+      this.changeMonth(newDay.isBefore(time) ? -1 : 1)
+    }
+    this.setState({
+      time: newDay,
+      isShowCalendar: 0,
+    })
+    if (this.props.handleDate) {
+      this.props.handleDate(newDay)
+    }
+  }
+  toggleCalendar = () => {
+    const { isShowCalendar } = this.state
+    this.setState({
+      isShowCalendar: 1 - isShowCalendar,
+    })
+  }
   render() {
     const sysInfo = Taro.getSystemInfoSync();
-    const { time, today, calendar } = this.state
-    const header = <View className='cal-head' style={ `padding-top: ${sysInfo.statusBarHeight}px` }>
-      <Text className='cal-head-title'>{ time.format('MMM YYYY') }</Text>
-    </View>
+    const { time, today, calendar, isShowCalendar } = this.state
+    const lunar = DateUtil.solar2lunar(time.year(), time.month() + 1, time.date());
+    const header = (
+      <View className='cal-head' style={ `padding-top: ${sysInfo.statusBarHeight}px` } onClick={ this.toggleCalendar }>
+        <Text className='cal-head-title'>{ time.format('ddd MMM DD') }</Text>
+        <Text className='cal-head-subTitle'>{ lunar.monthAlias } / { lunar.Term }</Text>
+      </View>
+    )
     const weekList = this.getWeekList(calendar)
     const content = weekList.map((week:any, index) => {
       const days = week.map(day => {
         let dayClass = 'day';
-        if (day.isSame(today, 'day')) dayClass += ' day_today';
+        if (day.isSame(today, 'day')) {
+          dayClass += ' day_today';
+        } else if (day.isSame(time, 'day')) {
+          dayClass += ' day_select';
+        }
         if (day.month() !== time.month()) dayClass += ' day_other';
-        return <View className={ dayClass } key={day.format('MMDD')}>
+        return <View className={ dayClass } key={day.format('MMDD')} onClick={this.setDay.bind(this, day)}>
           <Text className='day-date'>{ day.format('DD') }</Text>
           <Text className='day-lunar'>{ day.lunar.IDayCn }</Text>
         </View>
@@ -132,8 +177,10 @@ export default class Calendar extends Component {
     })
     return (
       <View className='cal'>
-        { header }
-        <View className='cal-content' onTouchStart={ this.touchStart } onTouchEnd={ this.touchEnd }>
+        <View id='cal-head'>
+          { header }
+        </View>
+        <View className={ `cal-content ${isShowCalendar ? 'cal-content_active' : ''}`} onTouchStart={ this.touchStart } onTouchEnd={ this.touchEnd }>
           { content }
         </View>
       </View>
