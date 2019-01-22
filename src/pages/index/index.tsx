@@ -1,11 +1,8 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
 import dayJs from 'dayjs'
-import api from '../../util/api'
 import suncalc from '../../util/suncalc'
-import withShare from '../../util/withShare'
-
-import Loading from '../../components/loading'
+import DateUtil from '../../util/date'
 import Calendar from '../../components/calendar'
 
 import './index.scss'
@@ -22,9 +19,7 @@ interface IState {
   phase: any,
 }
 
-// @ts-ignore
-@withShare()
-class Index extends Component<{}, IState> {
+class Index extends Component {
   config: Config = {
     navigationStyle: 'custom',
     backgroundColor: '#333',
@@ -46,6 +41,7 @@ class Index extends Component<{}, IState> {
     },
     phase: {
       phase: 0,
+      phaseName: '',
     }
   }
 
@@ -57,10 +53,6 @@ class Index extends Component<{}, IState> {
       barHeight,
       phase,
     })
-    this.getTextureStyle()
-  }
-  
-  getTextureStyle() {
     const query = Taro.createSelectorQuery()
     query.select('#texture').boundingClientRect(rect => {
       if (rect) {
@@ -86,26 +78,27 @@ class Index extends Component<{}, IState> {
     }
     return phaseStyle;
   }
+  handleDate(param) {
+    const newPhase = suncalc.getMoonIllumination(new Date(param.$y, param.$M, param.$D))
+    this.setState({
+      time: param,
+      phase: newPhase,
+    })
+  }
   render () {
-    const { textureWidth, phase } = this.state;
-    const handleDate = (param) => {
-      const phase = suncalc.getMoonIllumination(new Date(param.$y, param.$M, param.$D));
-      console.log(phase)
-      this.setState({
-        time: param,
-        phase,
-      })
-    }
+    const { textureWidth, phase, time } = this.state;
     const phaseStyle = this.getPhaseStyle(phase.phase, textureWidth)
+    const lunar = DateUtil.solar2lunar(time.year(), time.month() + 1, time.date());
     return (
       <View className='home'>
-        <Calendar ref='calendar' handleDate={ handleDate }  />
-        <View className='home-body' style={ `margin-top: ${this.state.barHeight}px`}>
+        <Calendar ref='calendar' onHandleDate={ this.handleDate }  />
+        <View className='home-body' style={ `margin-top: ${this.state.barHeight}px` }>
           <View className='moon'>
             <View className='moon-wrapper'>
               <Image src={moonPng} className='moon-texture' id='texture'/>
               <View className='moon-phase' style={phaseStyle}></View>
             </View>
+            <Text className='moon-name'>{ phase.phaseName }</Text>
           </View>
         </View>
       </View>

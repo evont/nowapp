@@ -14,11 +14,17 @@
   &-wrapper {
     height: 300px;
     width: 300px;
-    position: absolute;
-    left: 100px;
-    top: 100px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
     border-radius: 50%;
     overflow: hidden;
+  }
+  &-name {
+    display: block;
+    margin-top: 50px;
+    color: #fff;
+    text-align: center;
   }
   &-phase, &-texture {
     position: absolute;

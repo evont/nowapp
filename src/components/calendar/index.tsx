@@ -4,7 +4,7 @@ import dayJs from 'dayjs'
 import './index.scss'
 import DateUtil from '../../util/date'
 interface IProps {
-  handleDate: Function,
+  onHandleDate: Function,
 }
 export default class Calendar extends Component<IProps, {}> {
   state = {
@@ -138,8 +138,8 @@ export default class Calendar extends Component<IProps, {}> {
       time: newDay,
       isShowCalendar: 0,
     })
-    if (this.props.handleDate) {
-      this.props.handleDate(newDay)
+    if (this.props.onHandleDate) {
+      this.props.onHandleDate(newDay)
     }
   }
   toggleCalendar = () => {
