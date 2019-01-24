@@ -6,20 +6,20 @@ import DateUtil from '../../util/date'
 import Calendar from '../../components/calendar'
 
 import './index.scss'
-import moonPng from '../../assets/moon.png'
+
+import Comp1 from './calComp/comp1'
 
 
 interface IState {
   isLoading: boolean,
-  lunar: object,
   textureWidth: number,
   phaseStyle: string,
-  time: any,
+  uTime: any,
   barHeight: number,
   phase: any,
 }
 
-class Index extends Component {
+class Index extends Component<{}, IState> {
   config: Config = {
     navigationStyle: 'custom',
     backgroundColor: '#333',
@@ -28,17 +28,8 @@ class Index extends Component {
     isLoading: false,
     textureWidth: 0,
     phaseStyle: '',
-    time: dayJs(),
+    uTime: dayJs(),
     barHeight: 0,
-    lunar: {
-      cDay: 1,
-      cMonth: 1,
-      IMonthCn: '',
-      IDayCn: '',
-      Term: '',
-      monthAlias: '',
-      ncWeek: '',
-    },
     phase: {
       phase: 0,
       phaseName: '',
@@ -46,60 +37,31 @@ class Index extends Component {
   }
 
   async componentDidMount() {
-    const { time } = this.state;
-    const phase = suncalc.getMoonIllumination(new Date(time.$y, time.$M, time.$D));
+    const { uTime } = this.state;
+    const phase = suncalc.getMoonIllumination(new Date(uTime.$y, uTime.$M, uTime.$D));
     const barHeight = await this.refs.calendar.getBarHeight()
     this.setState({
       barHeight,
       phase,
     })
-    const query = Taro.createSelectorQuery()
-    query.select('#texture').boundingClientRect(rect => {
-      if (rect) {
-        const textureWidth = rect.width / 2
-        this.setState({
-          textureWidth,
-        })
-      }
-    }).exec()
-  }
-  getPhaseStyle(phase, allWidth) {
-    let phaseStyle = ''
-    const shadowColor = 'rgba(0, 0, 0, .7)'
-    const lightColor = 'rgba(255, 255, 255, .5)'
-    if (phase <= 0.25) {
-      phaseStyle = `border-right: ${phase / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
-    } else if (phase <= 0.5) {
-      phaseStyle = `border-left: ${(0.5 - phase) / 0.25 * allWidth}px solid ${shadowColor}; background-color: ${lightColor}`
-    } else if (phase <= 0.75)  {
-      phaseStyle = `border-right: ${(phase - 0.5) / 0.25 * allWidth}px solid ${shadowColor};  background-color: ${lightColor}`
-    } else if (phase <= 1) {
-      phaseStyle = `border-left: ${(1 - phase) / 0.25 * allWidth}px solid ${lightColor};background-color: ${shadowColor}`
-    }
-    return phaseStyle;
   }
   handleDate(param) {
     const newPhase = suncalc.getMoonIllumination(new Date(param.$y, param.$M, param.$D))
     this.setState({
-      time: param,
+      uTime: param,
       phase: newPhase,
     })
   }
   render () {
-    const { textureWidth, phase, time } = this.state;
-    const phaseStyle = this.getPhaseStyle(phase.phase, textureWidth)
-    const lunar = DateUtil.solar2lunar(time.year(), time.month() + 1, time.date());
+    const sys = Taro.getSystemInfoSync()
+    const { phase, uTime, barHeight } = this.state;
+    // const phaseStyle = getPhaseStyle(phase.phase, textureWidth)
+    const lunar = DateUtil.solar2lunar(uTime.year(), uTime.month() + 1, uTime.date());
     return (
       <View className='home'>
-        <Calendar ref='calendar' onHandleDate={ this.handleDate }  />
-        <View className='home-body' style={ `margin-top: ${this.state.barHeight}px` }>
-          <View className='moon'>
-            <View className='moon-wrapper'>
-              <Image src={moonPng} className='moon-texture' id='texture'/>
-              <View className='moon-phase' style={phaseStyle}></View>
-            </View>
-            <Text className='moon-name'>{ phase.phaseName }</Text>
-          </View>
+        <Calendar ref='calendar' headerText={ `${lunar.monthAlias} · ${lunar.Term}`} onHandleDate={ this.handleDate }  />
+        <View className='home-body' style={ `margin-top: ${ barHeight }px; height: ${sys.screenHeight - barHeight}px` }>
+          <Comp1 lunar={lunar} phase={phase} uTime={uTime} />
         </View>
       </View>
     )

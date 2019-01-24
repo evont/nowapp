@@ -4,9 +4,14 @@ import dayJs from 'dayjs'
 import './index.scss'
 import DateUtil from '../../util/date'
 interface IProps {
-  onHandleDate: Function,
+  onHandleDate?: Function,
+  theme: string,
+  headerText?: string,
 }
 export default class Calendar extends Component<IProps, {}> {
+  static defaultProps = {
+    theme: 'default',
+  }
   state = {
     time: dayJs(),
     today: dayJs(),
@@ -151,11 +156,10 @@ export default class Calendar extends Component<IProps, {}> {
   render() {
     const sysInfo = Taro.getSystemInfoSync();
     const { time, today, calendar, isShowCalendar } = this.state
-    const lunar = DateUtil.solar2lunar(time.year(), time.month() + 1, time.date());
+    const { headerText, theme } = this.props;
     const header = (
       <View className='cal-head' style={ `padding-top: ${sysInfo.statusBarHeight}px` } onClick={ this.toggleCalendar }>
-        <Text className='cal-head-title'>{ time.format('ddd MMM DD') }</Text>
-        <Text className='cal-head-subTitle'>{ lunar.monthAlias } / { lunar.Term }</Text>
+        <Text className='cal-head-title'>{ headerText }</Text>
       </View>
     )
     const weekList = this.getWeekList(calendar)
@@ -175,12 +179,22 @@ export default class Calendar extends Component<IProps, {}> {
       })
       return <View className='week' key={`week-${index}`}>{ days }</View>
     })
+    const weekName = ['日', '月', '火', '水', '木', '金', '土'];
     return (
-      <View className='cal'>
+      <View className={ `cal cal_theme_${theme}`}>
         <View id='cal-head'>
           { header }
         </View>
         <View className={ `cal-content ${isShowCalendar ? 'cal-content_active' : ''}`} onTouchStart={ this.touchStart } onTouchEnd={ this.touchEnd }>
+          <View className='week'>
+            {
+              weekName.map((item) => {
+                return (
+                  <View className='day day_title' key={ item }>{ item }</View>
+                )
+              })
+            }
+          </View>
           { content }
         </View>
       </View>

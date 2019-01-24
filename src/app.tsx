@@ -17,10 +17,6 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
-      'pages/enclave/index',
-      'pages/poem/index',
-      'pages/enclave/article',
-      'pages/totheend/index',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -28,38 +24,38 @@ class App extends Component {
       navigationBarTitleText: '今历',
       navigationBarTextStyle: 'white',
     },
-    tabBar: {
-      color: '#aeaeae',
-      selectedColor: '#444',
-      borderStyle: 'white',
-      backgroundColor: '#f5f5f5',
-      list: [
-        {
-          pagePath: 'pages/index/index',
-          iconPath: 'assets/icon-home.png',
-          selectedIconPath: 'assets/icon-home_on.png',
-          text: "方今"
-        },
-        {
-          pagePath: "pages/poem/index",
-          text: "搜韵",
-          iconPath: 'assets/icon-poem.png',
-          selectedIconPath: 'assets/icon-poem_on.png',
-        },
-        {
-          pagePath: "pages/enclave/index",
-          text: "飞地",
-          iconPath: 'assets/icon-enclave.png',
-          selectedIconPath: 'assets/icon-enclave_on.png',
-        },
-        {
-          pagePath: "pages/totheend/index",
-          text: "观止",
-          iconPath: 'assets/icon-article.png',
-          selectedIconPath: 'assets/icon-article_on.png',
-        }
-      ]
-    },
+    // tabBar: {
+    //   color: '#aeaeae',
+    //   selectedColor: '#444',
+    //   borderStyle: 'white',
+    //   backgroundColor: '#f5f5f5',
+    //   list: [
+    //     {
+    //       pagePath: 'pages/index/index',
+    //       iconPath: 'assets/icon-home.png',
+    //       selectedIconPath: 'assets/icon-home_on.png',
+    //       text: "方今"
+    //     },
+    //     {
+    //       pagePath: "pages/poem/index",
+    //       text: "搜韵",
+    //       iconPath: 'assets/icon-poem.png',
+    //       selectedIconPath: 'assets/icon-poem_on.png',
+    //     },
+    //     {
+    //       pagePath: "pages/enclave/index",
+    //       text: "飞地",
+    //       iconPath: 'assets/icon-enclave.png',
+    //       selectedIconPath: 'assets/icon-enclave_on.png',
+    //     },
+    //     {
+    //       pagePath: "pages/totheend/index",
+    //       text: "观止",
+    //       iconPath: 'assets/icon-article.png',
+    //       selectedIconPath: 'assets/icon-article_on.png',
+    //     }
+    //   ]
+    // },
   }
   
   // componentDidMount () {
