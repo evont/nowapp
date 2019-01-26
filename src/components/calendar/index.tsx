@@ -174,7 +174,7 @@ export default class Calendar extends Component<IProps, {}> {
         if (day.month() !== time.month()) dayClass += ' day_other';
         return <View className={ dayClass } key={day.format('MMDD')} onClick={this.setDay.bind(this, day)}>
           <Text className='day-date'>{ day.format('DD') }</Text>
-          <Text className='day-lunar'>{ day.lunar.IDayCn }</Text>
+          <Text className='day-lunar'>{ day.lunar.isTerm ? day.lunar.Term : day.lunar.IDayCn }</Text>
         </View>
       })
       return <View className='week' key={`week-${index}`}>{ days }</View>

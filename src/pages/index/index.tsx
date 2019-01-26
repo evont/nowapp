@@ -17,6 +17,7 @@ interface IState {
   uTime: any,
   barHeight: number,
   phase: any,
+  isSliderup: boolean,
 }
 
 class Index extends Component<{}, IState> {
@@ -33,7 +34,8 @@ class Index extends Component<{}, IState> {
     phase: {
       phase: 0,
       phaseName: '',
-    }
+    },
+    isSliderup: false,
   }
 
   async componentDidMount() {
@@ -52,16 +54,32 @@ class Index extends Component<{}, IState> {
       phase: newPhase,
     })
   }
+  toggleSlider() {
+    const { isSliderup } = this.state
+    this.setState({
+      isSliderup: !isSliderup,
+    })
+  }
   render () {
     const sys = Taro.getSystemInfoSync()
-    const { phase, uTime, barHeight } = this.state;
+    const { phase, uTime, barHeight, isSliderup } = this.state;
     // const phaseStyle = getPhaseStyle(phase.phase, textureWidth)
     const lunar = DateUtil.solar2lunar(uTime.year(), uTime.month() + 1, uTime.date());
+
+    const now = new Date(uTime.$y, uTime.$M, uTime.$D);
+    const year = new Date().getFullYear();
+    const yearDayCount = year % 4 ? 365 : 366;
+    const days = Math.round((now.getTime() - new Date(`${year}/01/01`).getTime()) / ( 24 * 60 * 60 * 1000));
     return (
       <View className='home'>
         <Calendar ref='calendar' headerText={ `${lunar.monthAlias} · ${lunar.Term}`} onHandleDate={ this.handleDate }  />
         <View className='home-body' style={ `margin-top: ${ barHeight }px; height: ${sys.screenHeight - barHeight}px` }>
           <Comp1 lunar={lunar} phase={phase} uTime={uTime} />
+          <View className={ `slider ${isSliderup ? 'slider_active' : ''}` } >
+            <Text>发现</Text>
+            
+            <Text className='percent'>{ (days / yearDayCount * 100).toFixed(2) }%</Text>
+          </View>
         </View>
       </View>
     )
