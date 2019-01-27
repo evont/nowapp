@@ -54,7 +54,7 @@ class Index extends Component<{}, IState> {
       phase: newPhase,
     })
   }
-  toggleSlider() {
+  toggleSlider = () => {
     const { isSliderup } = this.state
     this.setState({
       isSliderup: !isSliderup,
@@ -76,9 +76,10 @@ class Index extends Component<{}, IState> {
         <View className='home-body' style={ `margin-top: ${ barHeight }px; height: ${sys.screenHeight - barHeight}px` }>
           <Comp1 lunar={lunar} phase={phase} uTime={uTime} />
           <View className={ `slider ${isSliderup ? 'slider_active' : ''}` } >
-            <Text>发现</Text>
-            
-            <Text className='percent'>{ (days / yearDayCount * 100).toFixed(2) }%</Text>
+            <View className='slider-head' onClick={ this.toggleSlider }>
+              <Text className='title'>发现</Text>
+              <Text className='percent'>今年进度：{ (days / yearDayCount * 100).toFixed(2) }%</Text>
+            </View>
           </View>
         </View>
       </View>
