@@ -1,9 +1,13 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image, Text } from '@tarojs/components'
+import { View, Swiper, SwiperItem, Text } from '@tarojs/components'
 import dayJs from 'dayjs'
 import suncalc from '../../util/suncalc'
 import DateUtil from '../../util/date'
 import Calendar from '../../components/calendar'
+
+import Poem from '../../pages/poem'
+import Enclave from '../../pages/enclave'
+import Totheend from '../../pages/totheend'
 
 import './index.scss'
 
@@ -36,6 +40,7 @@ class Index extends Component<{}, IState> {
       phaseName: '',
     },
     isSliderup: false,
+    navList: ['搜韵', '飞地', '观止'],
   }
 
   async componentDidMount() {
@@ -62,7 +67,7 @@ class Index extends Component<{}, IState> {
   }
   render () {
     const sys = Taro.getSystemInfoSync()
-    const { phase, uTime, barHeight, isSliderup } = this.state;
+    const { phase, uTime, barHeight, isSliderup, navList } = this.state;
     // const phaseStyle = getPhaseStyle(phase.phase, textureWidth)
     const lunar = DateUtil.solar2lunar(uTime.year(), uTime.month() + 1, uTime.date());
 
@@ -80,6 +85,25 @@ class Index extends Component<{}, IState> {
               <Text className='title'>发现</Text>
               <Text className='percent'>今年进度：{ (days / yearDayCount * 100).toFixed(2) }%</Text>
             </View>
+            <View className='slider-nav'>
+              <View className='slider-nav-contain'>
+                {
+                  navList.map(ele => ( <Text className='title'>{ ele }</Text> ))
+                }
+              </View>
+              <View className='clider-nav-indicator'></View>
+            </View>
+            <Swiper>
+                <SwiperItem>
+                  <Poem />
+                </SwiperItem>
+                <SwiperItem>
+                  <Enclave />
+                </SwiperItem>
+                <SwiperItem>
+                  <Totheend />
+                </SwiperItem>
+            </Swiper>
           </View>
         </View>
       </View>
