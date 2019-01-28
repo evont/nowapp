@@ -5,9 +5,9 @@ import suncalc from '../../util/suncalc'
 import DateUtil from '../../util/date'
 import Calendar from '../../components/calendar'
 
-import Poem from '../../pages/poem'
-import Enclave from '../../pages/enclave'
-import Totheend from '../../pages/totheend'
+import Poem from './poem'
+import Enclave from './enclave'
+import Totheend from './totheend'
 
 import './index.scss'
 
@@ -22,6 +22,7 @@ interface IState {
   barHeight: number,
   phase: any,
   isSliderup: boolean,
+  current: number,
 }
 
 class Index extends Component<{}, IState> {
@@ -39,6 +40,7 @@ class Index extends Component<{}, IState> {
       phase: 0,
       phaseName: '',
     },
+    current: 0,
     isSliderup: false,
     navList: ['搜韵', '飞地', '观止'],
   }
@@ -65,9 +67,22 @@ class Index extends Component<{}, IState> {
       isSliderup: !isSliderup,
     })
   }
+
+  swiperChange = (e) => {
+    const { current } = e.detail;
+    this.setState({
+      current,
+    })
+  }
+
+  toggleSwiper(ind) {
+    this.setState({
+      current: ind,
+    })
+  }
   render () {
     const sys = Taro.getSystemInfoSync()
-    const { phase, uTime, barHeight, isSliderup, navList } = this.state;
+    const { phase, uTime, barHeight, isSliderup, navList, current } = this.state;
     // const phaseStyle = getPhaseStyle(phase.phase, textureWidth)
     const lunar = DateUtil.solar2lunar(uTime.year(), uTime.month() + 1, uTime.date());
 
@@ -88,20 +103,28 @@ class Index extends Component<{}, IState> {
             <View className='slider-nav'>
               <View className='slider-nav-contain'>
                 {
-                  navList.map(ele => ( <Text className='title'>{ ele }</Text> ))
+                  navList.map((ele, ind) => ( <Text className={ `title ${ ind === current ? 'title_active' : ''}` } onClick={this.toggleSwiper.bind(this, ind) } >{ ele }</Text> ))
                 }
               </View>
-              <View className='clider-nav-indicator'></View>
+              <View className='slider-nav-indicator' style={ `transform: translateX(${current * 100}%)` }>
+                <View className='indicator'></View>
+              </View>
             </View>
-            <Swiper>
+            <Swiper onChange={ this.swiperChange } className='slider-swiper' current={ current }>
                 <SwiperItem>
-                  <Poem />
+                  <View className='slider-swiper-contain'>
+                    <Poem />
+                  </View>
                 </SwiperItem>
                 <SwiperItem>
-                  <Enclave />
+                  <View className='slider-swiper-contain'>
+                    <Enclave />
+                  </View>
                 </SwiperItem>
                 <SwiperItem>
-                  <Totheend />
+                  <View className='slider-swiper-contain'>
+                    <Totheend />
+                  </View>
                 </SwiperItem>
             </Swiper>
           </View>

@@ -42,6 +42,45 @@
       border-radius: 10px;
     }
   }
+  &-nav {
+    position: relative;
+    height: 80px;
+    &-contain {
+      display: flex;
+      .title {
+        flex: 1;
+        color: #999;
+        text-align: center;
+        font-size: 28px;
+        &_active {
+          color: #333;
+        }
+      }
+    }
+    &-indicator {
+      position: relative;
+      bottom: -16px;
+      width: 33.3%;
+      transition: all .3s;
+      .indicator {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        display: block;
+        height: 6px;
+        width: 60px;
+        background-color: #333;
+        border-radius: 6px;
+      }
+    }
+  }
+  &-swiper {
+    height: 85%;
+    &-contain {
+      height: 100%;
+      overflow: auto;
+    }
+  }
   &_active {
     transform: translateY(0)
   }

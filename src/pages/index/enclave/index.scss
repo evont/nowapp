@@ -1,0 +1,13 @@
+.enclave {
+  height: 100%;
+  &-main {
+    padding: 0 20px;
+  }
+}
+.loading {
+  display: block;
+  padding: 40px 0;
+  text-align: center;
+  color: #666;
+  font-size: 24px;
+}

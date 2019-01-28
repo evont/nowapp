@@ -1,10 +1,10 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Text, RichText } from '@tarojs/components'
 
-import api from '../../util/api'
+import api from '../../../util/api'
 
-import leftPng from '../../assets/icon-left.png'
-import rightPng from '../../assets/icon-right.png'
+import leftPng from '../../../assets/icon-left.png'
+import rightPng from '../../../assets/icon-right.png'
 import './index.scss'
 
 interface clause {
