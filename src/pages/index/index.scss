@@ -79,6 +79,7 @@
     &-contain {
       height: 100%;
       overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
   }
   &_active {

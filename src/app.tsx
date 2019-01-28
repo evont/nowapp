@@ -17,6 +17,7 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
+      'pages/enclave/article',
     ],
     window: {
       backgroundTextStyle: 'light',

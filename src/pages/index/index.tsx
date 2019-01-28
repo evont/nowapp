@@ -103,7 +103,7 @@ class Index extends Component<{}, IState> {
             <View className='slider-nav'>
               <View className='slider-nav-contain'>
                 {
-                  navList.map((ele, ind) => ( <Text className={ `title ${ ind === current ? 'title_active' : ''}` } onClick={this.toggleSwiper.bind(this, ind) } >{ ele }</Text> ))
+                  navList.map((ele, ind) => ( <Text className={ `title ${ ind === current ? 'title_active' : ''}` } onClick={this.toggleSwiper.bind(this, ind) } key={ ele }>{ ele }</Text> ))
                 }
               </View>
               <View className='slider-nav-indicator' style={ `transform: translateX(${current * 100}%)` }>
