@@ -12,9 +12,10 @@
   width: 100%;
   &-head {
     position: relative;
-    height: 100px;
+    height: 130px;
     line-height: 100px;
     padding: 0 40px;
+    box-sizing: border-box;
     width: 100%;
     z-index: 2;
     &-arrow {

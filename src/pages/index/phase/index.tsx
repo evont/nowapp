@@ -3,7 +3,7 @@ import { View, Image, Text } from '@tarojs/components'
 import getPhaseStyle from '../../../util/phase'
 import dayJs from 'dayjs'
 
-import './comp1.scss'
+import './index.scss'
 import moonPng from '../../../assets/moon.png'
 
 interface IProps {
@@ -42,7 +42,8 @@ class Index extends Component<IProps, {}> {
   render () {
     const { textureWidth } = this.state
     const { lunar, phase, uTime } = this.props
-    const newDay = dayJs(new Date(uTime.$y, uTime.$M, uTime.$D))
+    const now = new Date(uTime.$y, uTime.$M, uTime.$D);
+    const newDay = dayJs(now)
     const phaseStyle = getPhaseStyle(phase.phase, textureWidth)
     const { cYear, ncWeek, cMonth, cDay, IMonthCn, IDayCn } = lunar
     const { phaseName } = phase
@@ -69,7 +70,7 @@ class Index extends Component<IProps, {}> {
             <Image src={moonPng} className='moon-texture' id='texture'/>
             <View className='moon-phase' style={phaseStyle}></View>
           </View>
-        </View> 
+        </View>
       </View>
     )
   }

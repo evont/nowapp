@@ -8,10 +8,10 @@ import Calendar from '../../components/calendar'
 import Poem from './poem'
 import Enclave from './enclave'
 import Totheend from './totheend'
+import Phase from './phase'
 
 import './index.scss'
 
-import Comp1 from './calComp/comp1'
 
 
 interface IState {
@@ -94,7 +94,7 @@ class Index extends Component<{}, IState> {
       <View className='home'>
         <Calendar ref='calendar' headerText={ `${lunar.monthAlias} · ${lunar.Term}`} onHandleDate={ this.handleDate }  />
         <View className='home-body' style={ `margin-top: ${ barHeight }px; height: ${sys.screenHeight - barHeight}px` }>
-          <Comp1 lunar={lunar} phase={phase} uTime={uTime} />
+          <Phase lunar={lunar} phase={phase} uTime={uTime} />
           <View className={ `slider ${isSliderup ? 'slider_active' : ''}` } >
             <View className='slider-head' onClick={ this.toggleSlider }>
               <Text className='title'>发现</Text>
