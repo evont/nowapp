@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import { View, Text, ScrollView } from '@tarojs/components'
 import { Enclaveblock } from '../../../components/enclaveinfo'
 import api from '../../../util/api'
 import Loading from '../../../components/loading'
@@ -48,7 +48,7 @@ class Enclave extends Component<{}, IState> {
     }
   }
 
-  onReachBottom() {
+  onBottom() {
     const { enclave } = this.state;
     const page = parseInt(enclave.pageInfo.currentPage) + 1;
     this.fetchData(page);
@@ -102,13 +102,17 @@ class Enclave extends Component<{}, IState> {
     return (
       isLoading ? <Loading />
       :
-        <View className='enclave'>
+        <ScrollView
+          className='enclave'
+          scrollY
+          onScrollToLower={ this.onBottom.bind(this) }
+        >
           <View className='enclave-main'>
           { recommendArticles }
           { articles }
           </View>
           { isFetching ? <Text className='loading'>加载中...</Text> : ''}
-        </View>
+        </ScrollView>
     )
   }
 }

@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, RichText, Text, Button } from '@tarojs/components'
+import { View, RichText, Text, Button, ScrollView } from '@tarojs/components'
 import api from '../../../util/api'
 import withShare from '../../../util/withShare'
 
