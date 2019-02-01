@@ -27,8 +27,12 @@ interface IState {
   Date: string,
   Index: number,
   Total: number,
+  uTime: any
 }
 
+interface iProps {
+  poemTime: any, 
+}
 
 function IsInlineComment(content) {
   let inline = true;
@@ -57,15 +61,10 @@ function formatClause(clause) {
     return content;
 }
 
-class Poem extends Component<{}, IState> {
-
-    /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
+class Poem extends Component<iProps, IState> {
+  static defaultProps = {
+    poemTime: {},
+  }
   config: Config = {
     navigationBarTitleText: '搜韵'
   }
@@ -84,9 +83,10 @@ class Poem extends Component<{}, IState> {
     Date: '',
     Index: 0,
     Total: 0,
+    uTime: {},
   } as IState
 
-  fetchData(direction = 1) {
+  fetchData(direction = 1, date = '') {
     Taro.showLoading({
       title: '加载中...',
     })
@@ -100,7 +100,7 @@ class Poem extends Component<{}, IState> {
         })
       } else if (ind < total || direction === 0) {
         Taro.request({
-          url: api.getURL(api.APIMAP.POEM, { index: ind + direction }),
+          url: api.getURL(api.APIMAP.POEM, { index: ind + direction, date }),
         }).then(res => {
           Taro.hideLoading()
           const { data } = res; 
@@ -136,8 +136,18 @@ class Poem extends Component<{}, IState> {
     })
   }
   
-  async componentDidMount() {
-    this.fetchData(0);
+  componentWillReceiveProps(nextProps) {
+    const { uTime } = this.state
+    const { poemTime } = nextProps
+    const uDate = `${uTime.$y}-${uTime.$M + 1}-${uTime.$D}`
+    const pDate = `${poemTime.$y}-${poemTime.$M + 1}-${poemTime.$D}`
+    if (uDate !== pDate) {
+      this.setState({
+        Index: 0,
+        uTime: poemTime,
+      })
+      this.fetchData(0, pDate);
+    }
   }
 
   render () {
