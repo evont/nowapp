@@ -94,12 +94,18 @@ class Poem extends Component<iProps, IState> {
       const ind = this.state.Index
       const total = this.state.Total
       const time = this.state.uTime
+      console.log(ind, total)
       if (ind === 0 && direction === -1) {
         Taro.showToast({
           title: '已经是第一首',
           icon: 'none'
         })
-      } else if (ind < total - 1 || direction === 0) {
+      } else if (total > 0 && ind > 0 && ind >= total - 1 && direction === 1) {
+        Taro.showToast({
+          title: '没有更多了',
+          icon: 'none'
+        })
+      } else {
         date = date || `${time.$y}-${time.$M + 1}-${time.$D}`
         Taro.request({
           url: api.getURL(api.APIMAP.POEM, { index: ind + direction, date }),
@@ -117,11 +123,6 @@ class Poem extends Component<iProps, IState> {
             isLoading: false,
           })
         });
-      } else {
-        Taro.showToast({
-          title: '没有更多了',
-          icon: 'none'
-        })
       }
     } catch (error) {
       Taro.showToast({
