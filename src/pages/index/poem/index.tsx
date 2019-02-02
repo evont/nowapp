@@ -99,7 +99,7 @@ class Poem extends Component<iProps, IState> {
           title: '已经是第一首',
           icon: 'none'
         })
-      } else if (ind < total || direction === 0) {
+      } else if (ind < total - 1 || direction === 0) {
         date = date || `${time.$y}-${time.$M + 1}-${time.$D}`
         Taro.request({
           url: api.getURL(api.APIMAP.POEM, { index: ind + direction, date }),
