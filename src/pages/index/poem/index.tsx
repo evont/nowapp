@@ -93,18 +93,20 @@ class Poem extends Component<iProps, IState> {
     try {
       const ind = this.state.Index
       const total = this.state.Total
+      const time = this.state.uTime
       if (ind === 0 && direction === -1) {
         Taro.showToast({
           title: '已经是第一首',
           icon: 'none'
         })
       } else if (ind < total || direction === 0) {
+        date = date || `${time.$y}-${time.$M + 1}-${time.$D}`
         Taro.request({
           url: api.getURL(api.APIMAP.POEM, { index: ind + direction, date }),
         }).then(res => {
           Taro.hideLoading()
           const { data } = res; 
-          const { Content = {}, Date = '', Index = 1, Total = 0 } = data;
+          const { Content = {}, Date = '', Index = ind, Total = 0 } = data;
           const Poem = Content.Poem || {};
           this.setState({
             Poem,
@@ -181,10 +183,10 @@ class Poem extends Component<iProps, IState> {
           </View>
           <RichText nodes={poemContent} className='poem-clauses' />
         </View>
-        <View className='pagination pagination_left' onClick={this.fetchData.bind(this, -1)}>
+        <View className='pagination pagination_left' onClick={this.fetchData.bind(this, -1, '')}>
           <Image src={leftPng} className='pagination-img'/>
         </View>
-        <View className='pagination pagination_right' onClick={this.fetchData.bind(this, 1)}>
+        <View className='pagination pagination_right' onClick={this.fetchData.bind(this, 1, '')}>
           <Image src={rightPng} className='pagination-img'/>
         </View>
       </View>

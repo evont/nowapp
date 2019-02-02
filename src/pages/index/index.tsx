@@ -90,7 +90,6 @@ class Index extends Component<{}, IState> {
     const year = new Date().getFullYear();
     const yearDayCount = year % 4 ? 365 : 366;
     const days = Math.round((now.getTime() - new Date(`${year}/01/01`).getTime()) / ( 24 * 60 * 60 * 1000));
-    console.log(uTime);
     return (
       <View className='home'>
         <Calendar ref='calendar' headerText={ `${lunar.monthAlias} · ${lunar.Term}`} onHandleDate={ this.handleDate }  />
