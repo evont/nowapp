@@ -155,6 +155,7 @@ export default class Calendar extends Component<IProps, {}> {
   }
   render() {
     const sysInfo = Taro.getSystemInfoSync();
+    console.log(sysInfo);
     const { time, today, calendar, isShowCalendar } = this.state
     const { headerText, theme } = this.props;
     const header = (
